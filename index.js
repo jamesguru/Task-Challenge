@@ -58,14 +58,7 @@ function showTasks(filter) {
               <p class="${isCompleted}">${task.title}</p>
 
 
-
-             
               
-
-             
-      
-
-                  
               </label>
 
 
@@ -83,19 +76,7 @@ function showTasks(filter) {
 
              
           </li>
-
-
-
-        
-
-
-
-      
-
-         
-
-
-      
+ 
       `;
       }
     });
@@ -109,18 +90,23 @@ function updateTask(updateId){
 
 
 
-  
+
 
   let tasks = JSON.parse(localStorage.getItem("task-list"));
 
 
-  
+
+  if(taskTitle.value && taskdesc && taskDate){
+
 
   tasks[updateId].title = taskTitle.value;
 
   tasks[updateId].desc = taskdesc.value;
 
   tasks[updateId].date = taskDate.value;
+
+
+  localStorage.setItem("task-list", JSON.stringify(tasks));
 
 
   taskTitle.value = "";
@@ -131,7 +117,16 @@ function updateTask(updateId){
 
 
 
-localStorage.setItem("task-list", JSON.stringify(tasks));
+  
+
+
+
+  }
+
+
+  
+
+  
 
 
 }
