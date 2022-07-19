@@ -9,103 +9,211 @@ const taskBox = document.querySelector(".task-box");
 
 
 const clearButton = document.querySelector(".clear-btn");
+const filterPending = document.querySelector(".pending");
+
+const task_title = document.querySelector('.task-title'); 
+
+const filters = document.querySelectorAll(".filters span");
+
+
+let tasks = JSON.parse(localStorage.getItem("task-list"));
 
 
 
 
 
 
-addButton.addEventListener("click", () => {
-  if (taskTitle.value && taskDate.value && taskdesc.value) {
-    let tasks = JSON.parse(localStorage.getItem("task-list"));
 
-    
-
-    function showTasks () {
-
-        let li = "";
+filters.forEach(btn => {
 
 
-    
+  btn.addEventListener("click",() => {
 
-       
+    document.querySelector("span.active").classList.remove("active");
 
-       if(tasks){
-
-        tasks.forEach((task,id) => {
-
-            li += `
-
-            <li class="task">
-
-                    <label for="${id}">
+    btn.classList.add("active");
 
 
-                    
-                    
-
-                    <input onclick = updateStatus(this) type="checkbox" id="${id} class="input-checkbox">
-
-                    <p>${task.title}</p>
+    showTasks(btn.id);
 
 
-                   
-            
-
-                        
-                    </label>
+  })
+})
 
 
-                    
 
-                    <div class="settings">
-
-                       
+function showTasks (filter) {
 
 
-                        <ul class="task-menu">
-
-                            <li>Edit</li>
-
-                            <li>Delete</li>
-                        </ul>
-                    </div>
 
 
-                   
-                </li>
-
-   
-            
-            `
+  let li = "";
 
 
-        });
-       }
 
-        taskBox.innerHTML = li;
+ if(tasks){
+
+  tasks.forEach((task,id) => {
 
 
-        
+    let isCompleted = task.status == 'completed' ? 'checked' : '';
+
+
+
+
+    if(filter == task.status  || filter == "all"){
+
+
+      li += `
+
+      <li class="task">
+
+              <label for="${id}">
+
+
+              
+              
+
+              <input onclick = "updateStatus( this)" type="checkbox" id="${id} class="input-checkbox">
+
+              <p class="${isCompleted}">${task.title}</p>
+
+
+
+           
+
+
+             
+      
+
+                  
+              </label>
+
+
+             <p class="delete" onclick = "deleteTask(${id})" >Delete</p>
+
+
+
+              
+
+              
+
+             
+          </li>
+
+         
+
+
+      
+      `
+
+
+
     }
 
+      
 
+  });
+ }
 
-    
+  taskBox.innerHTML = li;
 
-showTasks();
-
-function updateStatus(){
 
   
 }
 
 
-const deleteTask = (deleteID) => {
 
-console.log(deleteId);
+
+
+showTasks("all");
+
+function deleteTask(deleteId){
+
+
+tasks.splice(deleteId,1);
+
+
+localStorage.setItem("task-list",JSON.stringify(tasks));
+
+
+showTasks("all");
+
+
+
 
 }
+
+
+function updateStatus(selectedItem) {
+
+let taskName = selectedItem.parentElement.lastElementChild;
+
+
+
+const id = selectedItem.id.split("")[0];
+
+
+
+
+if(selectedItem.checked){
+
+
+
+  taskName.classList.add("checked");
+
+
+  tasks[id].status = "completed";
+
+}else{
+
+  taskName.classList.remove("checked");
+
+
+  tasks[id].status = "pending";
+
+
+  
+
+
+}
+
+
+
+
+
+localStorage.setItem("task-list",JSON.stringify(tasks));
+
+
+}
+
+
+
+addButton.addEventListener("click", () => {
+
+
+
+if (taskTitle.value && taskDate.value && taskdesc.value) {
+     
+
+
+
+
+filterPending.addEventListener("click",() => {
+
+
+  let tasks = JSON.parse(localStorage.getItem("task-list"));
+
+
+  
+
+
+
+})
+
+
+
+
     
 
     if (!tasks) {
@@ -129,7 +237,7 @@ console.log(deleteId);
 
     taskDate.value = "";
    
-    showTasks();
+    showTasks("all");
 
   }
 });
@@ -158,3 +266,5 @@ clearButton.addEventListener("click", () => {
 
 
 })
+
+
